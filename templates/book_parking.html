@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Book Parking - Vehicle Parking App{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2><i class="fas fa-plus"></i> Book Parking Spot</h2>
+            <p class="text-muted">Choose from available parking lots</p>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    {% if lots %}
+    <div class="row">
+        {% for lot in lots %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ lot.prime_location_name }}</h5>
+                    <p class="card-text">
+                        <i class="fas fa-map-marker-alt text-primary"></i> {{ lot.address }}<br>
+                        <i class="fas fa-tag text-success"></i> ₹{{ "%.2f"|format(lot.price) }} per hour<br>
+                        <i class="fas fa-square text-info"></i> {{ lot.available_spots }} spots available
+                    </p>
+                    <form method="POST" class="mt-auto">
+                        <input type="hidden" name="lot_id" value="{{ lot.id }}">
+                        <button type="submit" class="btn btn-primary w-100"
+                                onclick="return confirm('Confirm booking for {{ lot.prime_location_name }}?')">
+                            <i class="fas fa-car"></i> Book Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+            <h5>No Available Parking Lots</h5>
+            <p class="text-muted">Sorry, there are no parking lots with available spots at the moment.</p>
+            <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const button = this.querySelector('button[type="submit"]');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Booking...';
+            button.disabled = true;
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}View Spots - {{ lot.prime_location_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2><i class="fas fa-eye"></i> {{ lot.prime_location_name }}</h2>
+            <p class="text-muted">{{ lot.address }}</p>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4>{{ lot.maximum_number_of_spots }}</h4>
+                    <small>Total Spots</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4 class="text-success">{{ spots|selectattr('status', 'equalto', 'A')|list|length }}</h4>
+                    <small>Available</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4 class="text-danger">{{ spots|selectattr('status', 'equalto', 'O')|list|length }}</h4>
+                    <small>Occupied</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4>₹{{ "%.2f"|format(lot.price) }}</h4>
+                    <small>Per Hour</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-square"></i> Parking Spots Grid</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for spot in spots %}
+                    <div class="col-md-2 col-sm-3 col-4 mb-3">
+                        <div class="card {% if spot.status == 'O' %}border-danger{% else %}border-success{% endif %}">
+                            <div class="card-body text-center p-2">
+                                <div class="mb-2">
+                                    {% if spot.status == 'O' %}
+                                        <i class="fas fa-car text-danger fa-2x"></i>
+                                    {% else %}
+                                        <i class="fas fa-square text-success fa-2x"></i>
+                                    {% endif %}
+                                </div>
+                                <h6 class="card-title mb-1">Spot {{ spot.id }}</h6>
+                                {% if spot.status == 'O' %}
+                                    <small class="text-danger">Occupied</small><br>
+                                    <small class="text-muted">{{ spot.username }}</small><br>
+                                    <small class="text-muted">{{ spot.parking_timestamp[:16] }}</small>
+                                {% else %}
+                                    <small class="text-success">Available</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <div class="d-flex justify-content-center">
+                <div class="me-4">
+                    <i class="fas fa-square text-success"></i> Available
+                </div>
+                <div>
+                    <i class="fas fa-car text-danger"></i> Occupied
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

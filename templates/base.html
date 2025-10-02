@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vehicle Parking App{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: red;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            position:fixed;
+            bottom:100px;
+            width:100%;
+            
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: yellow;
+            bottom: 0;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: none;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color:yellow;
+            padding: 80px 0;
+            bottom:0;
+            position:fixed;
+            width:100%;
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+            background-color: yellow;
+            color: blue;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <i class="fas fa-car"></i> ParkEasy
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if session.user_id %}
+                        {% if session.is_admin %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('user_dashboard') }}">
+                                    <i class="fas fa-user"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('book_parking') }}">
+                                    <i class="fas fa-plus"></i> Book Parking
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt"></i> Logout ({{ session.username }})
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('register') }}">
+                                <i class="fas fa-user-plus"></i> Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for message in messages %}
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

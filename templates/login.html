@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Vehicle Parking App{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-sign-in-alt fa-3x text-primary mb-3"></i>
+                        <h3>Login to ParkEasy</h3>
+                        <p class="text-muted">Enter your credentials to continue</p>
+                    </div>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="mb-0">Don't have an account? 
+                            <a href="{{ url_for('register') }}" class="text-primary">Register here</a>
+                        </p>
+                    </div>
+
+                    <hr class="my-4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

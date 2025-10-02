@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard - Vehicle Parking App{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2><i class="fas fa-user"></i> Welcome, {{ session.username }}!</h2>
+            <p class="text-muted">Manage your parking reservations</p>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('book_parking') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Book New Parking
+            </a>
+        </div>
+    </div>
+
+    {% if active_reservations %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-car"></i> Active Reservations</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for reservation in active_reservations %}
+                <div class="col-md-6 mb-3">
+                    <div class="card border-primary">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ reservation.prime_location_name }}</h6>
+                            <p class="card-text">
+                                <strong>Spot Number:</strong> {{ reservation.spot_number }}<br>
+                                <strong>Parked Since:</strong> {{ reservation.parking_timestamp[:16] }}<br>
+                                <strong>Rate:</strong> ₹{{ "%.2f"|format(reservation.price) }}/hour
+                            </p>
+                            <a href="{{ url_for('release_spot', reservation_id=reservation.id) }}" 
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to release this spot?')">
+                                <i class="fas fa-sign-out-alt"></i> Release Spot
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card mb-4">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-car fa-3x text-muted mb-3"></i>
+            <h5>No Active Reservations</h5>
+            <p class="text-muted">You don't have any active parking reservations</p>
+            <a href="{{ url_for('book_parking') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Book Your First Parking
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if parking_history %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-history"></i> Parking History</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Location</th>
+                            <th>Spot</th>
+                            <th>Parked Time</th>
+                            <th>Released Time</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for history in parking_history %}
+                        <tr>
+                            <td>{{ history.prime_location_name }}</td>
+                            <td>{{ history.spot_number }}</td>
+                            <td>{{ history.parking_timestamp[:16] }}</td>
+                            <td>
+                                {% if history.leaving_timestamp %}
+                                    {{ history.leaving_timestamp[:16] }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if history.parking_cost %}
+                                    ₹{{ "%.2f"|format(history.parking_cost) }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

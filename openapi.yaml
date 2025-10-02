@@ -1,0 +1,219 @@
+openapi: 3.0.3
+info:
+  title: Parking Management System API
+  version: 1.0.0
+  description: API documentation for the Vehicle Parking App built using Flask, SQLite, and Bootstrap.
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+paths:
+
+  /:
+    get:
+      summary: Home page
+      responses:
+        '200':
+          description: Render homepage
+
+  /register:
+    get:
+      summary: Render registration page
+      responses:
+        '200':
+          description: Registration form
+
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required: [username, password, email, phone]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+      responses:
+        '302':
+          description: Redirect to login after successful registration
+
+  /login:
+    get:
+      summary: Render login page
+      responses:
+        '200':
+          description: Login form
+
+    post:
+      summary: Login user or admin
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '302':
+          description: Redirect to dashboard based on role
+
+  /logout:
+    get:
+      summary: Logout the user
+      responses:
+        '302':
+          description: Redirect to home page after logout
+
+  /admin/dashboard:
+    get:
+      summary: Admin dashboard view
+      responses:
+        '200':
+          description: Renders admin dashboard with lot and user stats
+
+  /admin/create_lot:
+    get:
+      summary: Render form to create a parking lot
+      responses:
+        '200':
+          description: Parking lot creation form
+
+    post:
+      summary: Create a new parking lot with spots
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required: [name, price, address, pin_code, max_spots]
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                address:
+                  type: string
+                pin_code:
+                  type: string
+                max_spots:
+                  type: integer
+      responses:
+        '302':
+          description: Redirect to admin dashboard
+
+  /admin/edit_lot/{lot_id}:
+    parameters:
+      - name: lot_id
+        in: path
+        required: true
+        schema:
+          type: integer
+
+    get:
+      summary: Edit parking lot form
+      responses:
+        '200':
+          description: Form to edit existing lot
+
+    post:
+      summary: Update lot details
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required: [name, price, address, pin_code, max_spots]
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                address:
+                  type: string
+                pin_code:
+                  type: string
+                max_spots:
+                  type: integer
+      responses:
+        '302':
+          description: Redirect after update
+
+  /admin/delete_lot/{lot_id}:
+    parameters:
+      - name: lot_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Delete a lot (only if no spots are occupied)
+      responses:
+        '302':
+          description: Redirect after deletion or failure
+
+  /admin/view_spots/{lot_id}:
+    parameters:
+      - name: lot_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: View all spots in a parking lot
+      responses:
+        '200':
+          description: Renders list of parking spots and status
+
+  /user/dashboard:
+    get:
+      summary: User dashboard showing active and past reservations
+      responses:
+        '200':
+          description: Renders user dashboard
+
+  /user/book_parking:
+    get:
+      summary: Form to choose parking lot for booking
+      responses:
+        '200':
+          description: Form to select available lot
+
+    post:
+      summary: Book the first available parking spot in selected lot
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required: [lot_id]
+              properties:
+                lot_id:
+                  type: integer
+      responses:
+        '302':
+          description: Redirect to user dashboard after booking
+
+  /user/release_spot/{reservation_id}:
+    parameters:
+      - name: reservation_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Release an active reservation
+      responses:
+        '302':
+          description: Spot released and redirected to dashboard

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 mb-4">Welcome to ParkEasy</h1>
+        <p class="lead mb-4">Your Smart Vehicle Parking Management Solution</p>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <p class="mb-4">Find, book, and manage parking spots with ease. Our system provides real-time availability and seamless booking experience.</p>
+                {% if not session.user_id %}
+                    <a href="{{ url_for('login') }}" class="btn btn-light btn-lg me-3">
+                        <i class="fas fa-sign-in-alt"></i> Get Started
+                    </a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </a>
+                {% else %}
+                    {% if session.is_admin %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('user_dashboard') }}" class="btn btn-light btn-lg me-3">
+                            <i class="fas fa-user"></i> My Dashboard
+                        </a>
+                        <a href="{{ url_for('book_parking') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-plus"></i> Book Parking
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col">
+            <h2 class="mb-4">Why Choose ParkEasy?</h2>
+            <p class="text-muted">Experience the future of parking management</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Find Parking</h5>
+                    <p class="card-text">Quickly locate available parking spots in your preferred location with real-time updates.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Easy Booking</h5>
+                    <p class="card-text">Book your parking spot instantly with our user-friendly interface and secure system.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card feature-card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">24/7 Access</h5>
+                    <p class="card-text">Manage your parking reservations anytime, anywhere with our always-available platform.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    </div>
+</div>
+{% endblock %}
